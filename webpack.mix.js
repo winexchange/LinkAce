@@ -1,20 +1,24 @@
 const mix = require('laravel-mix');
+const tailwindcss = require('tailwindcss');
 
-mix.options({
-  processCssUrls: false
-})
+mix
+  .options({
+    processCssUrls: false,
+    postCss: [tailwindcss('./tailwind.config.js')]
+  })
   .disableNotifications()
-  .setPublicPath('public')
-  .version();
+  .version()
+  .sourceMaps()
 
-mix.js('resources/assets/js/app.js', 'assets/dist/js')
-  .sourceMaps();
+  .js('resources/assets/js/app.js', 'assets/dist/js')
+  .combine([
+    'node_modules/jquery/dist/jquery.min.js',
+    'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js',
+    'node_modules/selectize/dist/js/standalone/selectize.js'
+  ], 'public/assets/dist/js/dependencies.js')
 
-mix.combine([
-  'node_modules/jquery/dist/jquery.min.js',
-  'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js',
-  'node_modules/selectize/dist/js/standalone/selectize.js'
-], 'public/assets/dist/js/dependencies.js');
-
-mix.sass('resources/assets/sass/app.scss', 'assets/dist/css')
-  .sass('resources/assets/sass/app-dark.scss', 'assets/dist/css');
+  .postCss('resources/assets/css/app.css', 'public/assets/dist/css', [
+    require('postcss-import'),
+    require('tailwindcss'),
+    require('autoprefixer')
+  ]);

@@ -7,7 +7,15 @@
 @stack('html-header')
 @include('partials.favicon')
 
-@include('partials.configure-darkmode')
+@if($respectSystemColorScheme)
+    <script>
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+@endif
+
+<link href="{{ mix('assets/dist/css/app.css') }}" rel="stylesheet">
 
 <script defer src="{{ mix('assets/dist/js/dependencies.js') }}"></script>
 <script defer src="{{ mix('assets/dist/js/app.js') }}"></script>
